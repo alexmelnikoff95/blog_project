@@ -5,8 +5,8 @@ from django.db import models
 from django.utils.text import slugify
 
 
-def gen_slug(s):
-    new_slug = slugify(s, allow_unicode=True)
+def gen_slug(slug):
+    new_slug = slugify(slug, allow_unicode=True)
     return new_slug + '-' + str(int(time()))
 
 
@@ -23,6 +23,8 @@ class Post(models.Model):
 
     class Meta:
         ordering = ['-date_pub']
+        verbose_name = 'Пост'
+        verbose_name_plural = 'Посты'
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -39,3 +41,5 @@ class Tag(models.Model):
 
     class Meta:
         ordering = ['-title']
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
