@@ -1,12 +1,8 @@
-from django.shortcuts import render
-from django.views import View
 
 
-class BaseView(View):
-    template = None
+from .post_views import PostDetailView, PostCreateView, PostUpdateView, PostDeleteView
+from .tag_views import TagCreateView, TagDeleteView, TagUpdateView, TagDetailView
+from .views import PostListView, TagListView, IndexView
 
-    def render_response(self, context=None):
-        if not context:
-            context = {}
-        assert self.template, 'необходимо задать шаблон'
-        return render(self.request, self.template, context=context)
+
+

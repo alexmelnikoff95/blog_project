@@ -1,6 +1,18 @@
+from django.shortcuts import render
+from django.views import View
+
 from blog.helper import AuthView
 from blog.models import Post, Tag
-from blog.views import BaseView
+
+
+class BaseView(View):
+    template = None
+
+    def render_response(self, context=None):
+        if not context:
+            context = {}
+        assert self.template, 'необходимо задать шаблон'
+        return render(self.request, self.template, context=context)
 
 
 class IndexView(BaseView):
