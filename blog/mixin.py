@@ -1,8 +1,9 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
+from django.views import View
 
 
-class DetailMixin:
+class DetailMixin(View):
     model = None
     template = None
 
@@ -15,7 +16,7 @@ class DetailMixin:
         })
 
 
-class CreateMixin:
+class CreateMixin(View):
     model_form = None
     template = None
 
@@ -32,7 +33,7 @@ class CreateMixin:
         return render(request, self.model_form, context={'form': form})
 
 
-class UpdateMixin:
+class UpdateMixin(View):
     model = None
     model_form = None
     template = None
@@ -57,7 +58,7 @@ class UpdateMixin:
         })
 
 
-class DeleteMixin:
+class DeleteMixin(View):
     model = None
     template = None
     redirect_url = None
