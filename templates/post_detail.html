@@ -2,9 +2,11 @@
 
 {% block content %}
     <h1 class="mt-5">
-        {{post.title}}
+        {{ post.title }}
     </h1>
     <p>
         {{ post.body }}
     </p>
+    <a class="btn btn-danger" href={{ post.get_update_url }}>Изменить</a>
+    <a class="btn btn-danger" href="{{ post.get_delete_url }}" role="button">Удалить</a>
 {% endblock %}
