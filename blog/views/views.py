@@ -1,3 +1,5 @@
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import render
 from django.views import View
 
@@ -16,7 +18,7 @@ class BaseView(View):
 
 
 class IndexView(BaseView):
-    template = 'index.html'
+    template = 'home.html'
 
     def get(self, request):
         return self.render_response()
@@ -25,20 +27,50 @@ class IndexView(BaseView):
 class PostListView(AuthView, BaseView):
     """Список постов"""
 
-    template = 'post_list.html'
+    template = 'home.html'
 
     def get(self, request):
         try:
-            post = Post.objects.all()
+            search_query = request.GET.get('search', '')
+
+            if search_query:
+                posts = Post.objects.filter(Q(title__icontains=search_query) | Q(body__icontains=search_query))
+            else:
+                posts = Post.objects.all()
+
+            paginator = Paginator(posts, 2)
+
+            page_number = request.GET.get('page', 1)
+            page = paginator.get_page(page_number)
+
+            is_paginated = page.has_other_pages()
+
+            if page.has_previous():
+                prev_url = '?page={}'.format(page.previous_page_number())
+            else:
+                prev_url = ''
+
+            if page.has_next():
+                next_url = '?page={}'.format(page.next_page_number())
+            else:
+                next_url = ''
+
+            context = {
+                'posts': page,
+                'is_paginated': is_paginated,
+                'next_url': next_url,
+                'prev_url': prev_url,
+
+            }
         except ValueError:
             return 'ошибка получения данных'
-        return self.render_response(context={'post': post})
+        return self.render_response(context=context)
 
 
 class TagListView(AuthView, BaseView):
     """Список тегов"""
 
-    template = 'tags_list.html'
+    template = 'tag_list.html'
 
     def get(self, request):
         try:

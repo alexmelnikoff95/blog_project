@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import View
@@ -27,9 +28,9 @@ class CreateMixin(View):
     def post(self, request):
         form = self.model_form(request.POST)
 
-        if form.is_valid:
+        if form.is_valid():
             new_tag = form.save()
-            return redirect('new_tag')
+            return redirect(new_tag)
         return render(request, self.model_form, context={'form': form})
 
 
@@ -39,19 +40,33 @@ class UpdateMixin(View):
     template = None
 
     def get(self, request, slug):
-        qs = self.model.objects.get(slug__iexact=slug)
+        try:
+            qs = self.model.objects.get(slug__iexact=slug)
+            if not qs.DoesNotExist():
+                raise Http404
+        except ValueError:
+            return 'ошибка'
+
         form = self.model_form(instance=qs)
+
         return render(request, self.template, context={
             'form': form,
             self.model.__name__.lower(): qs
         })
 
     def post(self, request, slug):
-        qs = self.model.objects.get(slug__iexact=slug)
+        try:
+            qs = self.model.objects.get(slug__iexact=slug)
+            if not qs.DoesNotExist():
+                raise Http404
+        except ValueError:
+            return 'ошибка'
+
         form = self.model_form(request.POST, instance=qs)
 
-        if form.is_valid:
-            return redirect('new_obj')
+        if form.is_valid():
+            new_obj = form.save()
+            return redirect(new_obj)
         return render(request, self.template, context={
             'form': form,
             self.model.__name__.lower(): qs
@@ -64,10 +79,21 @@ class DeleteMixin(View):
     redirect_url = None
 
     def get(self, request, slug):
-        qs = self.model.objects.get(slug__iexact=slug)
+        try:
+            qs = self.model.objects.get(slug__iexact=slug)
+            if not qs.DoesNotExist():
+                raise Http404
+        except ValueError:
+            return 'ошибка'
         return render(request, self.template, context={self.model.__name__.lower(): qs})
 
     def post(self, request, slug):
-        qs = self.model.objects.get(slug__iexact=slug)
-        qs.delete()
+        try:
+            qs = self.model.objects.get(slug__iexact=slug)
+            if not qs.DoesNotExist():
+                raise Http404
+            qs.delete()
+        except ValueError:
+            return 'ошибка'
+
         return redirect(reverse(self.redirect_url))
