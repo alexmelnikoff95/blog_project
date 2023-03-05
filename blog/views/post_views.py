@@ -24,4 +24,4 @@ class PostUpdateView(AuthView, UpdateMixin):
 class PostDeleteView(AuthView, DeleteMixin):
     model = Post
     template = 'post_delete.html'
-    redirect_url = 'index'
+    redirect_url = 'posts_list_url'
