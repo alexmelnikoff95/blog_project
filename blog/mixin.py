@@ -81,10 +81,8 @@ class DeleteMixin(View):
     def get(self, request, slug):
         try:
             qs = self.model.objects.get(slug__iexact=slug)
-            if not qs.DoesNotExist():
-                raise Http404
-        except ValueError:
-            return 'ошибка'
+        except self.model.DoesNotExist:
+            raise Http404('запись не найдена')
         return render(request, self.template, context={self.model.__name__.lower(): qs})
 
     def post(self, request, slug):
