@@ -1,0 +1,39 @@
+version: "3.9"
+
+volumes:
+  pg_data:
+  app_media:
+  app_static:
+
+services:
+  app:
+    image: blog_project
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - app_static:/static:ro
+      - app_media:/media:ro
+    env_file:
+      - ./docker.env
+  nginx:
+    image: nginx:1.21.4-alpine
+    restart: unless-stopped
+    volumes:
+      - app_static:/static:ro
+      - app_media:/media:ro
+    ports:
+      - "8080:80"
+      - "8081:443"
+    depends_on:
+      - app
+  db:
+    image: postgres:14-alpine
+    restart: on-failure
+    volumes:
+      - pg_data:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./docker.env

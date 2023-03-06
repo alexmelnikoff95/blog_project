@@ -24,7 +24,7 @@ class IndexView(BaseView):
         return self.render_response()
 
 
-class PostListView(AuthView, BaseView):
+class PostListView( BaseView):
     """Список постов"""
 
     template = 'home.html'
