@@ -12,7 +12,6 @@ class DetailMixin(View):
         qs = get_object_or_404(self.model, slug=slug)
         return render(request, self.template, context={
             self.model.__name__.lower(): qs,
-            'admin_object': qs,
             'detail': True
         })
 
@@ -42,10 +41,8 @@ class UpdateMixin(View):
     def get(self, request, slug):
         try:
             qs = self.model.objects.get(slug__iexact=slug)
-            if not qs.DoesNotExist():
-                raise Http404
-        except ValueError:
-            return 'ошибка'
+        except self.model.DoesNotExist:
+            raise Http404('пост не найден')
 
         form = self.model_form(instance=qs)
 
@@ -57,10 +54,8 @@ class UpdateMixin(View):
     def post(self, request, slug):
         try:
             qs = self.model.objects.get(slug__iexact=slug)
-            if not qs.DoesNotExist():
-                raise Http404
-        except ValueError:
-            return 'ошибка'
+        except self.model.DoesNotExist:
+            raise Http404('пост не найден')
 
         form = self.model_form(request.POST, instance=qs)
 
@@ -81,19 +76,12 @@ class DeleteMixin(View):
     def get(self, request, slug):
         try:
             qs = self.model.objects.get(slug__iexact=slug)
-            if not qs.DoesNotExist():
-                raise Http404
-        except ValueError:
-            return 'ошибка'
+        except self.model.DoesNotExist:
+            raise Http404('запись не найдена')
         return render(request, self.template, context={self.model.__name__.lower(): qs})
 
     def post(self, request, slug):
-        try:
-            qs = self.model.objects.get(slug__iexact=slug)
-            if not qs.DoesNotExist():
-                raise Http404
-            qs.delete()
-        except ValueError:
-            return 'ошибка'
-
+        is_deleted, _ = self.model.objects.filter(slug__iexact=slug).delete()
+        if not is_deleted:
+            return Http404('запись не удалена')
         return redirect(reverse(self.redirect_url))

@@ -17,14 +17,7 @@ class BaseView(View):
         return render(self.request, self.template, context=context)
 
 
-class IndexView(BaseView):
-    template = 'home.html'
-
-    def get(self, request):
-        return self.render_response()
-
-
-class PostListView(AuthView, BaseView):
+class PostListView(BaseView):
     """Список постов"""
 
     template = 'home.html'
