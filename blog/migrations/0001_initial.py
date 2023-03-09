@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
                 ('slug', models.SlugField(blank=True, max_length=155, unique=True)),
                 ('body', models.TextField(blank=True, db_index=True, verbose_name='Текст поста')),
                 ('date_pub', models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')),
-                ('tags', models.ManyToManyField(blank=True, related_name='posts', to='blog.tag', verbose_name='Название тега')),
+                ('templatetags', models.ManyToManyField(blank=True, related_name='posts', to='blog.tag', verbose_name='Название тега')),
             ],
             options={
                 'verbose_name': 'Пост',
