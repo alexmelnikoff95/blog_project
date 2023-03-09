@@ -70,4 +70,4 @@ class TagListView(AuthView, BaseView):
             tags = Tag.objects.all()
         except ValueError:
             return 'ошибка получения данных'
-        return self.render_response(context={'templatetags': tags})
+        return self.render_response(context={'tags': tags})
