@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.http import Http404
 from django.shortcuts import render
 from django.views import View
 
@@ -55,8 +56,8 @@ class PostListView(BaseView):
                 'prev_url': prev_url,
 
             }
-        except ValueError:
-            return 'ошибка получения данных'
+        except Post.DoesNotExist:
+            raise Http404('объект не найден')
         return self.render_response(context=context)
 
 
@@ -68,6 +69,6 @@ class TagListView(AuthView, BaseView):
     def get(self, request):
         try:
             tags = Tag.objects.all()
-        except ValueError:
-            return 'ошибка получения данных'
+        except Tag.DoesNotExist:
+            raise Http404('объект не найден')
         return self.render_response(context={'tags': tags})
