@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.views import View
 
 
-class DetailMixin(View):
+class DetailMixin:
     model = None
     template = None
 
@@ -16,7 +16,7 @@ class DetailMixin(View):
         })
 
 
-class CreateMixin(View):
+class CreateMixin:
     model_form = None
     template = None
 
@@ -33,7 +33,7 @@ class CreateMixin(View):
         return render(request, self.model_form, context={'form': form})
 
 
-class UpdateMixin(View):
+class UpdateMixin:
     model = None
     model_form = None
     template = None
@@ -68,7 +68,7 @@ class UpdateMixin(View):
         })
 
 
-class DeleteMixin(View):
+class DeleteMixin:
     model = None
     template = None
     redirect_url = None
