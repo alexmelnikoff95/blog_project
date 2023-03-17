@@ -1,20 +1,18 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
 from django.views import View
 
 
-class IsStaffPerm(PermissionRequiredMixin, View):
+class IsStaffPerm(UserPassesTestMixin, View):
 
-    def has_permission(self):
-        # user = self.request.user
-        # return user.has_perm('polls.can_open') or user.has_perm('polls.can_edit')
+    def test_func(self):
         if self.request.user.is_staff:
             return True
         return False
 
 
-class AuthView(PermissionRequiredMixin, View):
+class AuthView(UserPassesTestMixin, View):
 
-    def has_permission(self):
+    def test_func(self):
         if self.request.user.is_authenticated:
             return True
         return False
