@@ -25,7 +25,7 @@ services:
     command: 'celery -A core worker -l info'
   beat:
     <<: *main
-    command: 'celery -A core beat -l info'
+    command: celery -A core beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
   flower:
     <<: *main
     command: celery -A core flower --address=0.0.0.0 --port=5566

@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_celery_beat',
+    'django_celery_results',
+
     'blog'
 ]
 
@@ -82,6 +85,7 @@ if POSTGRES_HOST:
             'NAME': os.getenv('POSTGRES_DB'),
             'USER': os.getenv('POSTGRES_USER'),
             'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+            'HOST': POSTGRES_HOST,
             'PORT': os.getenv('POSTGRES_PORT', 5432),
         }
     }
@@ -148,4 +152,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
 
-
+CELERY_RESULT_BACKEND = 'django-db'
