@@ -57,7 +57,7 @@ class PostListView(BaseView):
 
             }
         except Post.DoesNotExist:
-            raise Http404('объект не найден')
+            raise Http404('такой страницы не существует')
         return self.render_response(context=context)
 
 
@@ -70,5 +70,5 @@ class TagListView(AuthView, BaseView):
         try:
             tags = Tag.objects.all()
         except Tag.DoesNotExist:
-            raise Http404('объект не найден')
+            raise Http404('такой страницы нет')
         return self.render_response(context={'tags': tags})
